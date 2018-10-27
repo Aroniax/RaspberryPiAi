@@ -1,2 +1,5 @@
 # ignore the buffer
 buffer.wav
+
+# ignore the database since it contains personal information
+db.sqlite3

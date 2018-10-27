@@ -28,27 +28,59 @@ while True:
 
                 r.adjust_for_ambient_noise(source)
                 print('Lausche')
-                speak('Ich höre!')
                 audio = r.listen(source)
 
 
             voiceInput = r.recognize_google(audio, language='de-DE')
             confirmedInput = True
+            print('Du: ' + voiceInput)
         except sr.UnknownValueError:
             print('Error')
-            speak('Das habe ich leider nicht verstanden.')
+            #speak('Das habe ich leider nicht verstanden.')
 
-    if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', string)) == True:
+    if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', voiceInput)) == True:
 
-        print('Du: ' + voiceInput)
+        if voiceInput == 'Computer':
 
-        answ = str(chatbot.get_response(voiceInput))
+            print('triggert')
+            speak('Ich höre')
 
-        print(str("Kina: ") + answ)
+            isConversation = True
 
-        if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', answ)) == False:
-            print('WARNUNG')
-        else:
-            speak(quote(answ))
+            while (isConversation == True):
+
+                confirmedInput = False
+                while (confirmedInput == False):
+
+                    try:
+                        with mic as source:
+
+                            r.adjust_for_ambient_noise(source)
+                            print('Lausche')
+                            #speak('Ich höre!')
+                            audio = r.listen(source)
+
+
+                        voiceInput = r.recognize_google(audio, language='de-DE')
+                        confirmedInput = True
+                    except sr.UnknownValueError:
+                        print('Error')
+                        speak('Das habe ich leider nicht verstanden.')
+
+                print('Du: ' + voiceInput)
+
+                if voiceInput == 'Ruhe':
+                    isConversation = False
+                    speak('Ok. Ich warte auf das Stichwort.')
+
+                else:
+                    answ = str(chatbot.get_response(voiceInput))
+
+                    print(str('Kina: ') + answ)
+
+                    if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', answ)) == False:
+                        print('WARNUNG')
+                    else:
+                        speak(quote(answ))
     else:
         print('WARNUNG: ' + string)
