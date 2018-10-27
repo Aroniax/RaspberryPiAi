@@ -25,7 +25,7 @@ while True:
 
                 r.adjust_for_ambient_noise(source)
                 print('Lausche')
-                os.system('pico2wave -l de-DE -w buffer.wav "hhhhhhhh Ich höre!" && aplay buffer.wav')
+                os.system('pico2wave -l de-DE -w buffer.wav "Ich höre!" && aplay buffer.wav')
                 audio = r.listen(source)
 
 
@@ -33,7 +33,7 @@ while True:
             ja = True
         except sr.UnknownValueError:
             print('Error')
-            os.system('pico2wave -l de-DE -w buffer.wav "hhhhhhhh Das habe ich leider nicht verstanden." && aplay buffer.wav')
+            os.system('pico2wave -l de-DE -w buffer.wav "Das habe ich leider nicht verstanden." && aplay buffer.wav')
 
     if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', string)) == True:
 
@@ -46,7 +46,7 @@ while True:
         if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', answ)) == False:
             print('WARNUNG')
         else:
-            os.system('pico2wave -l de-DE -w buffer.wav "hhhhhhhh ' +  quote(answ) + '" && aplay buffer.wav')
+            os.system('pico2wave -l de-DE -w buffer.wav "' +  quote(answ) + '" && aplay buffer.wav')
     else:
         print('WARNUNG: ' + string)
 
