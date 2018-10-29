@@ -16,7 +16,7 @@ mic = sr.Microphone()
 voiceInput = ''
 
 def speak(text):
-    os.system('pico2wave -l de-DE -w buffer.wav "' + text + '" && aplay buffer.wav')
+    os.system('pico2wave -l de-DE -w buffer.wav "' + text + '" && aplay buffer.wav -q')
 
 while True:
 
@@ -27,60 +27,57 @@ while True:
             with mic as source:
 
                 r.adjust_for_ambient_noise(source)
-                print('Lausche')
+                print(' #Lausche')
                 audio = r.listen(source)
-
 
             voiceInput = r.recognize_google(audio, language='de-DE')
             confirmedInput = True
             print('Du: ' + voiceInput)
+
         except sr.UnknownValueError:
-            print('Error')
+            print(' #Error')
             #speak('Das habe ich leider nicht verstanden.')
 
-    if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', voiceInput)) == True:
+    if voiceInput == 'Computer':
 
-        if voiceInput == 'Computer':
+        print(' #Unterhaltung begonnen')
+        speak('Ich höre')
+        print('Kina: Ich höre')
 
-            print('triggert')
-            speak('Ich höre')
+        isConversation = True
 
-            isConversation = True
+        while (isConversation == True):
 
-            while (isConversation == True):
+            confirmedInput = False
+            while (confirmedInput == False):
 
-                confirmedInput = False
-                while (confirmedInput == False):
+                try:
+                    with mic as source:
 
-                    try:
-                        with mic as source:
-
-                            r.adjust_for_ambient_noise(source)
-                            print('Lausche')
-                            #speak('Ich höre!')
-                            audio = r.listen(source)
+                        r.adjust_for_ambient_noise(source)
+                        print(' #Lausche')
+                        #speak('Ich höre!')
+                        audio = r.listen(source)
+                        print(' #Verarbeite das Gehörte')
 
 
-                        voiceInput = r.recognize_google(audio, language='de-DE')
-                        confirmedInput = True
-                    except sr.UnknownValueError:
-                        print('Error')
-                        speak('Das habe ich leider nicht verstanden.')
+                    voiceInput = r.recognize_google(audio, language='de-DE')
+                    confirmedInput = True
+                except sr.UnknownValueError:
+                    print(' #Error')
+                    speak('Das habe ich leider nicht verstanden.')
+                    print('Kina: Das habe ich leider nicht verstanden.')
 
-                print('Du: ' + voiceInput)
+            print('Du: ' + voiceInput)
 
-                if voiceInput == 'Ruhe':
-                    isConversation = False
-                    speak('Ok. Ich warte auf das Stichwort.')
+            if voiceInput == 'Ruhe':
+                isConversation = False
+                speak('Ok. Ich warte auf das Stichwort.')
+                print('Kina: Ok. Ich warte auf das Stichwort.')
+                print(' #Unterhaltung beendet')
 
-                else:
-                    answ = str(chatbot.get_response(voiceInput))
+            else:
+                answ = str(chatbot.get_response(voiceInput))
 
-                    print(str('Kina: ') + answ)
-
-                    if bool(re.match('^[ÖÄÜöäüßA-Za-z0-9.,?+=:* ]+$', answ)) == False:
-                        print('WARNUNG')
-                    else:
-                        speak(quote(answ))
-    else:
-        print('WARNUNG: ' + string)
+                print(str('Kina: ') + answ)
+                speak(quote(answ))
