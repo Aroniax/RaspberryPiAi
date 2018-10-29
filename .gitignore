@@ -3,3 +3,6 @@ buffer.wav
 
 # ignore the database since it contains personal information
 db.sqlite3
+
+# ignore the personal config file
+.cfg
